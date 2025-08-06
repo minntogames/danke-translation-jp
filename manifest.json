@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Danke007JpTranslator",
+  "version": "0.39.1",
+  "description": "Dankeの非公式日本語訳拡張機能です。",
+  "content_scripts": [
+    {
+      "matches": ["https://danke007.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
