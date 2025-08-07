@@ -1,23 +1,215 @@
-// .wrapper内でweaponを含む要素の中の"SS"を画像に置き換える
-function replaceSSWithImageInWeaponWrapper(root=document) {
+// .checkbox-line内の自動計算文言の翻訳
+function translateCheckboxLine(root=document) {
+  root.querySelectorAll('.checkbox-line').forEach(line => {
+    // テキストノードと子要素両方対応
+    for (const node of line.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const txt = node.textContent.trim();
+        if (checkboxLineTranslations[txt]) {
+          node.textContent = checkboxLineTranslations[txt];
+        }
+      }
+    }
+    line.querySelectorAll('*').forEach(child => {
+      const txt = child.textContent.trim();
+      if (checkboxLineTranslations[txt]) {
+        child.textContent = checkboxLineTranslations[txt];
+      }
+    });
+  });
+}
+// .my-info内のATK説明文（分割ノード対応）翻訳
+const myInfoATKEn = "The ATK is located on the equipment page of the game, and the final ATK can only be found by clicking on the icon in the upper left corner of the equipment page.";
+const myInfoATKJp = "<ATK>はゲームの装備画面に表示されています。<最終ATK>は、装備画面の左上にあるアイコンをクリックすることで確認できます。";
+
+function translateMyInfoATKDescription(root=document) {
+  root.querySelectorAll('.my-info').forEach(el => {
+    // すべてのテキストノードを連結して比較
+    let textNodes = [];
+    let fullText = '';
+    for (const node of el.childNodes) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        textNodes.push(node);
+        fullText += node.textContent;
+      }
+    }
+    if (fullText.replace(/\s+/g, ' ').trim() === myInfoATKEn) {
+      // 既存ノードを全て削除
+      while (el.firstChild) el.removeChild(el.firstChild);
+      // <ATK>と<最終ATK>をspanでラップ
+      let html = myInfoATKJp
+        .replace(/<ATK>/g, '<span class="text-tag-green">ATK</span>')
+        .replace(/<最終ATK>/g, '<span class="text-tag-green">最終ATK</span>');
+      // 全体をspanでラップ
+      const span = document.createElement('span');
+      span.innerHTML = html;
+      el.appendChild(span);
+    }
+  });
+}
+// data-v-93498d95が付いたdiv要素のaria-label属性をcheckboxLineTranslationsで翻訳
+function translateDivAriaLabelDataV93498d95(root=document) {
+  root.querySelectorAll('div[data-v-93498d95][aria-label]').forEach(div => {
+    const ariaLabel = div.getAttribute('aria-label');
+    if (!ariaLabel) return;
+    const jp = checkboxLineTranslations[ariaLabel.trim()];
+    if (jp) {
+      div.setAttribute('aria-label', jp);
+    }
+  });
+}
+
+const checkboxLineTranslations = {
+  'Automatic calculation (make sure the current attack is correctly filled in)': '自動計算（現在の攻撃力が正しく入力されていることを確認してください）',
+  "Automatically calculating...": "自動計算中...",
+};
+
+
+
+// .wrapper内で各装備種別名を含む要素の中の"SS"を画像に置き換える
+function replaceSSWithImageInWrapper(root=document) {
+  const uri = "https://youtube.minntelia.com/danke-translation-jp/";
+  const typeToImg = {
+    weapon: 'ss_tl.PNG',
+    armor: 'ss_ea.PNG',
+    necklace: 'ss_jn.PNG',
+    belt: 'ss_ss.PNG',
+    bracer: 'ss_mb.PNG',
+    boots: 'ss_gw.PNG',
+  };
+  const equipmentOrder = ['weapon', 'armor', 'necklace', 'belt', 'bracer', 'boots'];
+  const cycleData = {
+    weapon: [
+      {type: 'img', src: 'ss_tl.PNG', alt: 'SS'},
+      {type: 'none'}
+    ],
+    armor: [
+      {type: 'img', src: 'ss_ea.PNG', alt: 'SS'},
+      {type: 'img', src: 's_eb.PNG', alt: 'E'},
+      {type: 'none'}
+    ],
+    necklace: [
+      {type: 'img', src: 'ss_jn.PNG', alt: 'SS'},
+      {type: 'img', src: 's_ve.PNG', alt: 'V'},
+      {type: 'none'}
+    ],
+    belt: [
+      {type: 'img', src: 'ss_ss.PNG', alt: 'SS'},
+      {type: 'img', src: 's_cb.PNG', alt: 'C'},
+      {type: 'none'}
+    ],
+    bracer: [
+      {type: 'img', src: 'ss_mb.PNG', alt: 'SS'},
+      {type: 'img', src: 's_vh.PNG', alt: 'V'},
+      {type: 'none'}
+    ],
+    boots: [
+      {type: 'img', src: 'ss_gw.PNG', alt: 'SS'},
+      {type: 'img', src: 's_vb.PNG', alt: 'V'},
+      {type: 'none'}
+    ]
+  };
+  // .wrapper内の.text-lineをすべて取得し、index順で装備種別を割り当てる
+  const textLines = [];
   root.querySelectorAll('.wrapper').forEach(wrapper => {
-    if (wrapper.textContent.includes('weapon')) {
-      // 子孫ノードを再帰的に探索
-      const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, null);
-      let node;
-      while ((node = walker.nextNode())) {
-        if (node.textContent.trim() === 'SS') {
+    wrapper.querySelectorAll('.text-line').forEach(line => textLines.push(line));
+  });
+  textLines.forEach((textLine, index) => {
+    // E/V/CテキストをSSに戻す
+    const walkerRestore = document.createTreeWalker(textLine, NodeFilter.SHOW_TEXT, null);
+    let nodeRestore;
+    while ((nodeRestore = walkerRestore.nextNode())) {
+      if (["E","V","C"].includes(nodeRestore.textContent.trim())) {
+        nodeRestore.textContent = 'SS';
+      }
+    }
+    // 装備タイプをindex順で割り当て
+    if (index >= equipmentOrder.length) return;
+    const equipType = equipmentOrder[index];
+    // サイクル状態を取得
+    let cycleIdx = textLine.dataset.cycleIdx ? parseInt(textLine.dataset.cycleIdx) : 0;
+    // cycleIdxがcycleArrの範囲外なら0にリセット
+    const cycleArr = cycleData[equipType];
+    if (cycleIdx >= cycleArr.length) cycleIdx = 0;
+    textLine.dataset.cycleIdx = cycleIdx;
+    const state = cycleArr[cycleIdx] || cycleArr[0];
+    // SSテキストを置換
+    const walker = document.createTreeWalker(textLine, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.textContent.trim() === 'SS') {
+        if (state.type === 'img') {
           const img = document.createElement('img');
-          img.src = './src/img/ss/ss_tl.PNG';
-          img.alt = 'SS';
-          img.style.height = '1em';
+          img.src = uri + 'src/img/ss/' + state.src;
+          img.alt = state.alt;
+          img.style.height = '2em';
           img.style.verticalAlign = 'middle';
+          img.dataset.equipType = equipType;
+          img.dataset.textLineIndex = index;
           node.parentNode.replaceChild(img, node);
+        } else if (state.type === 'text') {
+          node.textContent = state.text;
+        } else if (state.type === 'none') {
+          node.textContent = '';
+        }
+      } else if (node.textContent.trim() === 'E' || node.textContent.trim() === 'V' || node.textContent.trim() === 'C') {
+        // E/V/CテキストをSSに置換
+        if (state.type === 'img') {
+          const img = document.createElement('img');
+          img.src = uri + 'src/img/ss/' + state.src;
+          img.alt = state.alt;
+          img.style.height = '2em';
+          img.style.verticalAlign = 'middle';
+          img.dataset.equipType = equipType;
+          img.dataset.textLineIndex = index;
+          node.parentNode.replaceChild(img, node);
+        } else if (state.type === 'text') {
+          node.textContent = state.text;
+        } else if (state.type === 'none') {
+          node.textContent = '';
         }
       }
     }
   });
 }
+// --- クリックでサイクル切り替え ---
+let ssCycleClickInitialized = false;
+function initSSCycleClick() {
+  if (ssCycleClickInitialized) return;
+  ssCycleClickInitialized = true;
+  document.addEventListener('click', e => {
+    // 画像がクリックされたか判定
+    if (!(e.target instanceof HTMLImageElement)) return;
+    const img = e.target;
+    if (!img.closest('.text-line')) return;
+    // 500ms後にその.text-lineだけcycleIdxを進める
+    setTimeout(() => {
+      const textLine = img.closest('.text-line');
+      // text-lineのindexを再計算
+      const allTextLines = [];
+      document.querySelectorAll('.wrapper').forEach(wrapper => {
+        wrapper.querySelectorAll('.text-line').forEach(line => allTextLines.push(line));
+      });
+      const idx = allTextLines.indexOf(textLine);
+      if (idx === -1) return;
+      const equipmentOrder = ['weapon', 'armor', 'necklace', 'belt', 'bracer', 'boots'];
+      if (idx >= equipmentOrder.length) return;
+      const equipType = equipmentOrder[idx];
+      const cycleArrLen = (function(){
+        switch(equipType){
+          case 'weapon': return 2;
+          case 'armor': case 'necklace': case 'belt': case 'bracer': case 'boots': return 3;
+          default: return 2;
+        }
+      })();
+      let now = textLine.dataset.cycleIdx ? parseInt(textLine.dataset.cycleIdx) : 0;
+      now = (now + 1) % cycleArrLen;
+      textLine.dataset.cycleIdx = now;
+      replaceSSWithImageInWrapper();
+    }, 500);
+  });
+}
+initSSCycleClick();
 // --- すべての翻訳辞書・関数定義のさらに後ろ（ファイル末尾）に移動 ---
 // .damage-moon-input-title の翻訳
 const damageMoonInputTitleTranslations = {
@@ -107,7 +299,10 @@ function runAllTranslations() {
   translateButtonSpans();
   translateDamageMoonInputTitles();
   document.querySelectorAll('.q-card-root.tp').forEach(translateCard);
-  replaceSSWithImageInWeaponWrapper();
+  replaceSSWithImageInWrapper();
+  translateCheckboxLine();
+  translateDivAriaLabelDataV93498d95();
+  translateMyInfoATKDescription();
 }
 
 
@@ -339,6 +534,9 @@ const observer = new MutationObserver(mutations => {
         if (text === 'Only main Survivor, synergy level up, combat harmony and teamwork passive are counted, donatello is not included.') {
           node.textContent = 'メインサバイバーのみが対象で、同調レベルアップ、協力作戦、およびチームワークのパッシブスキルがカウントされます。ドナテロは含まれません。';
         }
+        if (text === 'The calculator can only calculate the change of attack according to the change of attribute, and cannot directly calculate the attack value. So when you check this option, you need to ensure that the current input attack value is correct. Since it is impossible to obtain all accurate data, some calculation results are estimates.') {
+          node.textContent = 'この計算機は属性の変化に基づいて攻撃力の変化を計算するもので、直接的な攻撃値の計算は行いません。このオプションを選択する場合、現在の入力攻撃値が正しいことを確認してください。すべての正確なデータを取得することは不可能なため、一部の計算結果は推定値となります。';
+        }
         // ボタンテキストも翻訳
         translateButtonSpans(node);
       }
@@ -355,6 +553,9 @@ const observer = new MutationObserver(mutations => {
         }
         if (text === 'Only main Survivor, synergy level up, combat harmony and teamwork passive are counted, donatello is not included.') {
           el.textContent = 'メインサバイバーのみが対象で、同調レベルアップ、協力作戦、およびチームワークのパッシブスキルがカウントされます。ドナテロは含まれません。';
+        }
+        if (text === 'The calculator can only calculate the change of attack according to the change of attribute, and cannot directly calculate the attack value. So when you check this option, you need to ensure that the current input attack value is correct. Since it is impossible to obtain all accurate data, some calculation results are estimates.') {
+          el.textContent = 'この計算機は属性の変化に基づいて攻撃力の変化を計算するもので、直接的な攻撃値の計算は行いません。このオプションを選択する場合、現在の入力攻撃値が正しいことを確認してください。すべての正確なデータを取得することは不可能なため、一部の計算結果は推定値となります。';
         }
         // ボタンテキストも翻訳
         translateButtonSpans(el);
