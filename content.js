@@ -485,39 +485,63 @@ const fourLetterWordTranslations = {
 };
 
 function replaceFourLetterWords(root=document) {
-  // body以下の全テキストノードを走査
+  // 画像置換対象をSet化
+  const imageWords = new Set(fourLetterWords);
+  // 各単語の出現回数を記録
+  const wordCountMap = {};
+  for (const w of fourLetterWords) {
+    wordCountMap[w] = (wordCountMap[w] || 0) + 1;
+  }
+  // 各単語の何回目かを記録するカウンタ
+  const wordIndexMap = {};
+  for (const w of fourLetterWords) {
+    wordIndexMap[w] = 0;
+  }
   const walker = document.createTreeWalker(root.body || root, NodeFilter.SHOW_TEXT, null);
   let node;
   while ((node = walker.nextNode())) {
-    let replaced = false;
+    let text = node.textContent;
+    let found = false;
     for (const w of fourLetterWords) {
       const regex = new RegExp(`\\b${w}\\b`, 'g');
-      if (node.textContent.match(regex)) {
+      // 何回出現するか
+      const matches = text.match(regex);
+      if (matches) {
+        found = true;
         // 画像で置換する場合
-        if (w === "Huma" || w === "Book" || w === "Immo" || w === "Inst" || w === "Ange" || w === "Unic" || w === "Othe" || w === "Star" || w === "High" || w === "Void" || w === "Eye" || w === "Life" || w === "Nano" || w === "Dice" || w === "Dime" || w === "Ment" || w === "Atom" || w === "Time" || w === "Drag" || w === "Hype" || w === "Cybe" || w === "Clon" || w === "Drea" || w === "Gene" || w === "Memo" || w === "Temp" || w === "Spat" || w === "Holo" || w === "Gold" || w === "Old" || w === "Savi" || w === "Safe" || w === "Myst" || w === "Luck" || w === "Scie" || w === "Supe" || w === "Gran" || w === "Pass" || w === "Tabl" || w === "Prim" || w === "Flar" || w === "Astr" || w === "Limi" || w === "Vita" || w === "Uniq" || w === "Biza" || w === "Aero" || w === "Nucl" || w === "Plas" || w === "Elem" || w === "Auto" || w === "Spor" || w === "Worl" || w === "Elep" || w === "Phan" || w === "Birt" || w === "Frui" || w === "Crys" || w === "Anti" || w === "Hydr" || w === "Comm" || w === "Coll" || w === "Lion" || w === "Hear" || w === "Bran" || w === "Mini" || w === "Micr" || w === "Klei" || w === "Bunn" || w === "Need" || w === "Sort" || w === "Wild" || w === "Infi" || w === "Cosm" || w === "Worm" || w === "Bion" || w === "EM" || w === "Fire" || w === "Shut" || w === "Neur" || w === "Port" || w === "Rare") {
-          // 画像名は英語名と一致
-          const img = document.createElement('img');
-          img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${w}.webp`;
-          img.alt = w;
-          img.style.height = '2em';
-          img.style.verticalAlign = 'middle';
-          // テキストノードを分割して置換
+        if (imageWords.has(w)) {
           const parent = node.parentNode;
-          const parts = node.textContent.split(regex);
+          const parts = text.split(regex);
           for (let i = 0; i < parts.length; i++) {
             if (parts[i]) parent.insertBefore(document.createTextNode(parts[i]), node);
-            if (i < parts.length - 1) parent.insertBefore(img.cloneNode(), node);
+            if (i < parts.length - 1) {
+              // 画像ファイル名を一意化
+              wordIndexMap[w] = (wordIndexMap[w] || 0) + 1;
+              const img = document.createElement('img');
+              let imgFile = `${w}`;
+              if (wordCountMap[w] > 1) {
+                imgFile += `_${wordIndexMap[w]}`;
+              }
+              img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}.webp`;
+              img.alt = w;
+              img.style.height = '2.3em';
+              img.style.verticalAlign = 'middle';
+              parent.insertBefore(img, node);
+            }
           }
           parent.removeChild(node);
-          replaced = true;
           break;
         } else {
           // テキスト置換
-          node.textContent = node.textContent.replace(regex, fourLetterWordTranslations[w]);
+          text = text.replace(regex, fourLetterWordTranslations[w]);
         }
       }
     }
-    if (replaced) continue;
+    if (!found) continue;
+    // テキスト置換のみの場合
+    if (node.parentNode && node.parentNode.contains(node)) {
+      node.textContent = text;
+    }
   }
 }
 
@@ -838,5 +862,5 @@ if (document.readyState === 'loading') {
 // 数秒ごとに全翻訳を再実行
 setInterval(() => {
   runAllTranslations();
-}, 100); // 1秒ごと（必要に応じて調整）
+}, 0); // 1秒ごと（必要に応じて調整）
 
