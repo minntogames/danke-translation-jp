@@ -492,6 +492,24 @@ const fourLetterWords = [
 // Port
 // Rare
 
+// 重複単語の画像ファイル名マッピング（事前定義）
+const duplicateWordsImageMap = {
+  "Myst": ["Myst_1.webp", "Myst_2.webp"],
+  "Drea": ["Drea_1.webp", "Drea_2.webp"],
+  "Gold": ["Gold_1.webp", "Gold_2.webp", "Gold_3.webp"],
+  "Supe": ["Supe_1.webp", "Supe_2.webp"],
+  "Dice": ["Dice_1.webp", "Dice_2.webp"],
+  "Anti": ["Anti_1.webp", "Anti_2.webp"],
+  "Luck": ["Luck_1.webp", "Luck_2.webp"],
+  "Star": ["Star_1.webp", "Star_2.webp"]
+};
+
+// 重複単語の使用カウンタ（グローバル状態）
+const duplicateUsageCount = {};
+for (const word in duplicateWordsImageMap) {
+  duplicateUsageCount[word] = 0;
+}
+
 const fourLetterWordTranslations = {
   "Huma": "人類",
   "Book": "古の",
@@ -580,60 +598,55 @@ const fourLetterWordTranslations = {
 function replaceFourLetterWords(root=document) {
   // 画像置換対象をSet化
   const imageWords = new Set(fourLetterWords);
-  // 各単語の出現回数を記録
-  const wordCountMap = {};
-  for (const w of fourLetterWords) {
-    wordCountMap[w] = (wordCountMap[w] || 0) + 1;
-  }
-  // 各単語の何回目かを記録するカウンタ
-  const wordIndexMap = {};
-  for (const w of fourLetterWords) {
-    wordIndexMap[w] = 0;
-  }
+  
   const walker = document.createTreeWalker(root.body || root, NodeFilter.SHOW_TEXT, null);
   let node;
   while ((node = walker.nextNode())) {
     let text = node.textContent;
     let found = false;
+    
+    // fourLetterWords配列の順番で処理
     for (const w of fourLetterWords) {
-      const regex = new RegExp(`\\b${w}\\b`, 'g');
-      // 何回出現するか
-      const matches = text.match(regex);
-      if (matches) {
+      const regex = new RegExp(`\\b${w}\\b`);
+      
+      if (text.match(regex)) {
         found = true;
         // 画像で置換する場合
         if (imageWords.has(w)) {
-          const parent = node.parentNode;
-          const parts = text.split(regex);
-          for (let i = 0; i < parts.length; i++) {
-            if (parts[i]) parent.insertBefore(document.createTextNode(parts[i]), node);
-            if (i < parts.length - 1) {
-              // 画像ファイル名を一意化
-              wordIndexMap[w] = (wordIndexMap[w] || 0) + 1;
-              const img = document.createElement('img');
-              let imgFile = `${w}`;
-              if (wordCountMap[w] > 1) {
-                imgFile += `_${wordIndexMap[w]}`;
-              }
-              img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}.webp`;
-              img.alt = w;
-              img.style.height = '2.5em';
-              img.style.verticalAlign = 'middle';
-              parent.insertBefore(img, node);
-            }
+          const img = document.createElement('img');
+          let imgFile;
+          
+          // 重複単語の場合は事前定義マッピングを使用
+          if (duplicateWordsImageMap[w]) {
+            const imageArray = duplicateWordsImageMap[w];
+            const currentIndex = duplicateUsageCount[w] % imageArray.length;
+            imgFile = imageArray[currentIndex];
+            duplicateUsageCount[w]++;
+          } else {
+            // 単一の場合はそのままのファイル名
+            imgFile = `${w}.webp`;
           }
+          
+          img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}`;
+          img.alt = w;
+          img.style.height = '2.0em';
+          img.style.verticalAlign = 'middle';
+          
+          // テキストを分割して画像を挿入
+          const parts = text.split(regex);
+          const parent = node.parentNode;
+          if (parts[0]) parent.insertBefore(document.createTextNode(parts[0]), node);
+          parent.insertBefore(img, node);
+          if (parts[1]) parent.insertBefore(document.createTextNode(parts[1]), node);
           parent.removeChild(node);
           break;
         } else {
-          // テキスト置換
+          // テキスト置換（一回のみ）
           text = text.replace(regex, fourLetterWordTranslations[w]);
+          node.textContent = text;
+          break;
         }
       }
-    }
-    if (!found) continue;
-    // テキスト置換のみの場合
-    if (node.parentNode && node.parentNode.contains(node)) {
-      node.textContent = text;
     }
   }
 }
