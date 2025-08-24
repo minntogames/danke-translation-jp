@@ -1,68 +1,305 @@
-// .checkbox-line内の自動計算文言の翻訳
-function translateCheckboxLine(root=document) {
-  root.querySelectorAll('.checkbox-line').forEach(line => {
-    // テキストノードと子要素両方対応
-    for (const node of line.childNodes) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        const txt = node.textContent.trim();
-        if (checkboxLineTranslations[txt]) {
-          node.textContent = checkboxLineTranslations[txt];
+// data-v-8ad820e7内の特定テキスト翻訳
+const dataV8ad820e7Translations = {
+  "This damage multiplier calculator lets you freely adjust gear, survivors, collectibles and other attributes to instantly view results. Some premium features require subscription:  ": "このダメージ倍率計算機では、装備、生存者、収集品、その他の属性を自由に調整し、即座に結果を確認できます。一部のプレミアム機能はサブスクリプションが必要です： ",
+  "Learn more": "詳細はこちら"
+};
+
+function translateDataV8ad820e7Texts(root=document) {
+  root.querySelectorAll('[data-v-8ad820e7]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV8ad820e7Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
         }
       }
     }
-    line.querySelectorAll('*').forEach(child => {
-      const txt = child.textContent.trim();
-      if (checkboxLineTranslations[txt]) {
-        child.textContent = checkboxLineTranslations[txt];
+  });
+}
+
+// data-v-97357ef8内の特定テキスト翻訳
+const dataV97357ef8Translations = {
+  "Calculate Core Allocation": "コア配分計算"
+};
+
+function translateDataV97357ef8Texts(root=document) {
+  root.querySelectorAll('[data-v-97357ef8]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV97357ef8Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-1665dd79内の特定テキスト翻訳
+const dataV1665dd79Translations = {
+  "Enter the number of cores, as well as the minimum and maximum star levels for each gear. If you don't want to equip the gear but still need it to provide the chaos fusion power, check the": "各装備のコア数と最小・最大星レベルを入力してください。コアを装着せずに混沌融合のみを提供させたい場合は、",
+  "icon next to it.": "のアイコンを押して有効化してください。",
+  "Maximum Star Limit": "最大星レベル",
+  "Minimum Star Limit": "最小星レベル"
+};
+
+function translateDataV1665dd79Texts(root=document) {
+  root.querySelectorAll('[data-v-1665dd79]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV1665dd79Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-ba29143f内の特定テキスト翻訳
+const dataVba29143fTranslations = {
+  "The calculation process takes tens of seconds to several minutes, please be patient.": "計算処理には数十秒から数分かかります。しばらくお待ちください。",
+  "Pay Attention": "注意事項",
+  "The calculation depends on survivors, tech parts, collectibles, pets and skills etc. You need to select them in advance, otherwise the result may be not accurate.": "計算は生存者、テックパーツ、収集品、ペット、スキルなどに依存します。事前に選択する必要があります。そうしないと結果が不正確になる可能性があります。"
+};
+
+function translateDataVba29143fTexts(root=document) {
+  root.querySelectorAll('[data-v-ba29143f]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataVba29143fTranslations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-e42e7082内の特定テキスト翻訳と要素削除
+const dataVe42e7082Translations = {
+  "English": "日本語のみ対応"
+};
+
+function translateDataVe42e7082Texts(root=document) {
+  root.querySelectorAll('[data-v-e42e7082]').forEach(element => {
+    // 简体中文を含む要素で親にrole="listitem"があるものを削除
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    const nodesToCheck = [];
+    while ((node = walker.nextNode())) {
+      nodesToCheck.push(node);
+    }
+    
+    nodesToCheck.forEach(node => {
+      if (node.textContent.includes('简体中文')) {
+        // 親要素を辿ってrole="listitem"を持つ要素を探す
+        let parent = node.parentElement;
+        while (parent) {
+          if (parent.getAttribute('role') === 'listitem') {
+            parent.remove();
+            return;
+          }
+          parent = parent.parentElement;
+        }
       }
     });
-  });
-}
-// .my-info内のATK説明文（分割ノード対応）翻訳
-const myInfoATKEn = "The ATK is located on the equipment page of the game, and the final ATK can only be found by clicking on the icon in the upper left corner of the equipment page.";
-const myInfoATKJp = "<ATK>はゲームの装備画面に表示されています。<最終ATK>は、装備画面の左上にあるアイコンをクリックすることで確認できます。";
-
-function translateMyInfoATKDescription(root=document) {
-  root.querySelectorAll('.my-info').forEach(el => {
-    // すべてのテキストノードを連結して比較
-    let textNodes = [];
-    let fullText = '';
-    for (const node of el.childNodes) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        textNodes.push(node);
-        fullText += node.textContent;
+    
+    // テキスト翻訳
+    const walker2 = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node2;
+    while ((node2 = walker2.nextNode())) {
+      const text = node2.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataVe42e7082Translations)) {
+        if (text.includes(englishText)) {
+          node2.textContent = text.replace(englishText, japaneseText);
+        }
       }
     }
-    if (fullText.replace(/\s+/g, ' ').trim() === myInfoATKEn) {
-      // 既存ノードを全て削除
-      while (el.firstChild) el.removeChild(el.firstChild);
-      // <ATK>と<最終ATK>をspanでラップ
-      let html = myInfoATKJp
-        .replace(/<ATK>/g, '<span class="text-tag-green">ATK</span>')
-        .replace(/<最終ATK>/g, '<span class="text-tag-green">最終ATK</span>');
-      // 全体をspanでラップ
-      const span = document.createElement('span');
-      span.innerHTML = html;
-      el.appendChild(span);
-    }
   });
 }
-// data-v-93498d95が付いたdiv要素のaria-label属性をcheckboxLineTranslationsで翻訳
-function translateDivAriaLabelDataV93498d95(root=document) {
-  root.querySelectorAll('div[data-v-93498d95][aria-label]').forEach(div => {
-    const ariaLabel = div.getAttribute('aria-label');
-    if (!ariaLabel) return;
-    const jp = checkboxLineTranslations[ariaLabel.trim()];
-    if (jp) {
-      div.setAttribute('aria-label', jp);
+
+// data-v-a7c737c2内の特定テキスト翻訳
+const dataVa7c737c2Translations = {
+  "The ": "",
+  "ATK": "ATK",
+  " is located on the equipment page of the game, and the ": "はゲームの装備画面に表示されています。",
+  "final ATK": "最終ATK",
+  " can only be found by clicking on the icon in the upper left corner of the equipment page.": "は、装備画面の左上にあるアイコンをクリックすることで確認できます。",
+  "Automatic calculation (make sure the current attack is correctly filled in)": "自動計算（現在の攻撃力が正しく入力されていることを確認してください）",
+  "Automatically calculating...": "自動計算中...",
+  "Max gear level your designs can support": "設計が対応可能な最大装備レベル"
+};
+
+function translateDataVa7c737c2Texts(root=document) {
+  root.querySelectorAll('[data-v-a7c737c2]').forEach(element => {
+    // .my-infoクラスを持つ要素内かどうかをチェック
+    let hasMyInfoClass = element.classList.contains('my-info');
+    if (!hasMyInfoClass) {
+      // 親要素を辿って.my-infoクラスを探す
+      let parent = element.parentElement;
+      while (parent) {
+        if (parent.classList && parent.classList.contains('my-info')) {
+          hasMyInfoClass = true;
+          break;
+        }
+        parent = parent.parentElement;
+      }
+    }
+    
+    // 全体のテキストを取得
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let fullText = '';
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
+      fullText += node.textContent;
+    }
+    
+    // ATK説明文の翻訳（.my-infoクラス内のみ）
+    const atkPattern = /The (ATK) is located on the equipment page of the game, and the (final ATK) can only be found by clicking on the icon in the upper left corner of the equipment page\./;
+    if (hasMyInfoClass && atkPattern.test(fullText)) {
+      // 要素内の内容を全て削除
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      
+      // 翻訳されたHTMLを作成
+      const translatedHTML = '<span class="text-tag-green">ATK</span>はゲームの装備画面に表示されています。<span class="text-tag-green">最終ATK</span>は、装備画面の左上にあるアイコンをクリックすることで確認できます。';
+      
+      // HTMLとして挿入
+      element.innerHTML = translatedHTML;
+      return; // この要素の処理を終了
+    }
+    
+    // その他のテキストの翻訳（.my-infoクラスの制限なし）
+    for (const [englishText, japaneseText] of Object.entries(dataVa7c737c2Translations)) {
+      if (fullText.includes(englishText) && englishText !== "The " && englishText !== "ATK" && englishText !== " is located on the equipment page of the game, and the " && englishText !== "final ATK" && englishText !== " can only be found by clicking on the icon in the upper left corner of the equipment page.") {
+        // 通常のテキスト置換
+        textNodes.forEach(node => {
+          if (node.textContent.includes(englishText)) {
+            node.textContent = node.textContent.replace(englishText, japaneseText);
+          }
+        });
+      }
     }
   });
 }
 
-const checkboxLineTranslations = {
-  'Automatic calculation (make sure the current attack is correctly filled in)': '自動計算（現在の攻撃力が正しく入力されていることを確認してください）',
-  "Automatically calculating...": "自動計算中...",
+// data-v-4169b4f9内の特定テキスト翻訳
+const dataV4169b4f9Translations = {
+  "Red Collectible Count of Custom Collection Set": "カスタムコレクションセットの赤色収集品数"
 };
+
+function translateDataV4169b4f9Texts(root=document) {
+  root.querySelectorAll('[data-v-4169b4f9]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV4169b4f9Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-6b888e4b内の特定テキスト翻訳
+const dataV6b888e4bTranslations = {
+  "Weak Spot Damage": "弱点ダメージ",
+  "Shield Damage": "シールドダメージ",
+  "Higher Shield, More Damage": "シールド値が高いほどダメージ増加",
+  "Void Forge-2 of Evervoid Armor": "アポカリプスアーマーの破壊神鋳★2",
+  "Red Entry of Stardust Sash": "ステラベルトの赤エントリー",
+  "Colored Entry of Stardust Sash": "ステラベルトのカラーエントリー",
+  "Revival Entry of Enternal Suit": "エターナルスーツの復活エントリー",
+  "Voidwaker Emblem Berserk": "破壊者エンブレムの狂暴状態",
+  "Lower HP, Higher Damage": "HPが低いほどダメージ増加",
+  "Damage on Lacerated targets boost": "裂傷対象へのダメージ増加",
+  "The probabilities that survivor stand in the direction of weak spot, excluding time of Riftstar Rip": "リフトスターリップの時間を除く、生存者が弱点方向に立つ確率",
+  "Damage boost when shield exists": "シールド存在時のダメージブースト",
+  "The higher the shield value, the more the damage boost": "シールド値が高いほど、ダメージブーストが増加",
+  "When Shield HP is higher than own HP, skill damage + 10%": "シールドHPが自身のHPより高い場合、スキルダメージ+10%",
+  "collect orbs to increase damage": "オーブを収集してダメージを増加",
+  "When total energy is above 90%, +30% additional skill damage": "総エネルギーが90%以上の場合、追加スキルダメージ+30%",
+  "Gain Berserk for 5s when leveling up: +40% damage": "レベルアップ時に5秒間狂暴状態獲得：ダメージ+40%",
+  "The lower your HP is, the higher your damage": "HPが低いほど、ダメージが高くなる",
+  "Restore system defaults": "システムデフォルトに戻す"
+};
+
+function translateDataV6b888e4bTexts(root=document) {
+  root.querySelectorAll('[data-v-6b888e4b]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV6b888e4bTranslations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-77b79087内の特定テキスト翻訳
+const dataV77b79087Translations = {
+  "Set Effect Percent": "効果パーセント設定"
+};
+
+function translateDataV77b79087Texts(root=document) {
+  root.querySelectorAll('[data-v-77b79087]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV77b79087Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
+
+// data-v-2268fce9内の特定テキスト翻訳
+const dataV2268fce9Translations = {
+  "Set the Revival Time": "復活時間を設定"
+};
+
+function translateDataV2268fce9Texts(root=document) {
+  root.querySelectorAll('[data-v-2268fce9]').forEach(element => {
+    // テキストノードを走査
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent;
+      for (const [englishText, japaneseText] of Object.entries(dataV2268fce9Translations)) {
+        if (text.includes(englishText)) {
+          node.textContent = text.replace(englishText, japaneseText);
+        }
+      }
+    }
+  });
+}
 
 
 
@@ -300,9 +537,16 @@ function runAllTranslations() {
   translateDamageMoonInputTitles();
   document.querySelectorAll('.q-card-root.tp').forEach(translateCard);
   replaceSSWithImageInWrapper();
-  translateCheckboxLine();
-  translateDivAriaLabelDataV93498d95();
-  translateMyInfoATKDescription();
+  translateDataV8ad820e7Texts();
+  translateDataV97357ef8Texts();
+  translateDataV1665dd79Texts();
+  translateDataVba29143fTexts();
+  translateDataVe42e7082Texts();
+  translateDataVa7c737c2Texts();
+  translateDataV4169b4f9Texts();
+  translateDataV6b888e4bTexts();
+  translateDataV77b79087Texts();
+  translateDataV2268fce9Texts();
   replaceFourLetterWords();
 }
 // D2GLzvkY.jsの4文字英単語を日本語に置換する
@@ -507,56 +751,97 @@ function replaceFourLetterWords(root=document) {
   // 画像置換対象をSet化
   const imageWords = new Set(fourLetterWords);
   
-  const walker = document.createTreeWalker(root.body || root, NodeFilter.SHOW_TEXT, null);
-  let node;
-  while ((node = walker.nextNode())) {
-    let text = node.textContent;
-    let found = false;
-    
-    // fourLetterWords配列の順番で処理
-    for (const w of fourLetterWords) {
-      const regex = new RegExp(`\\b${w}\\b`);
+  // data-v-4169b4f9属性を持つ要素内のみで処理
+  const targetElements = root.querySelectorAll('[data-v-4169b4f9]');
+  if (targetElements.length === 0) return;
+  
+  targetElements.forEach(targetElement => {
+    const walker = document.createTreeWalker(targetElement, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      let text = node.textContent;
+      let found = false;
       
-      if (text.match(regex)) {
-        found = true;
-        // 画像で置換する場合
-        if (imageWords.has(w)) {
-          const img = document.createElement('img');
-          let imgFile;
-          
-          // 重複単語の場合は事前定義マッピングを使用
-          if (duplicateWordsImageMap[w]) {
-            const imageArray = duplicateWordsImageMap[w];
-            const currentIndex = duplicateUsageCount[w] % imageArray.length;
-            imgFile = imageArray[currentIndex];
-            duplicateUsageCount[w]++;
+      // fourLetterWords配列の順番で処理
+      for (const w of fourLetterWords) {
+        const regex = new RegExp(`\\b${w}\\b`);
+        
+        if (text.match(regex)) {
+          found = true;
+          // 画像で置換する場合
+          if (imageWords.has(w)) {
+            const img = document.createElement('img');
+            let imgFile;
+            
+            // 重複単語の場合は事前定義マッピングを使用
+            if (duplicateWordsImageMap[w]) {
+              const imageArray = duplicateWordsImageMap[w];
+              const currentIndex = duplicateUsageCount[w] % imageArray.length;
+              imgFile = imageArray[currentIndex];
+              duplicateUsageCount[w]++;
+            } else {
+              // 単一の場合はそのままのファイル名
+              imgFile = `${w}.webp`;
+            }
+            
+            img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}`;
+            img.alt = w;
+            
+            // 画像サイズ変更機構を組み込み
+            img.className = 'collection-img-responsive';
+            img.style.cssText = `
+              height: 64px;
+              width: auto;
+              vertical-align: middle;
+              transition: all 0.3s ease;
+              object-fit: contain;
+              @media (max-width: 500px) {
+                .collection-img-responsive {
+                  height: 48px !important;
+                }
+              }
+            `;
+            
+            // メディアクエリ対応のCSS追加（初回のみ）
+            if (!document.querySelector('#collection-img-styles')) {
+              const style = document.createElement('style');
+              style.id = 'collection-img-styles';
+              style.textContent = `
+                .collection-img-responsive {
+                  height: clamp(32px, 8vw, 64px) !important;
+                }
+                @media (max-width: 500px) {
+                  .collection-img-responsive {
+                    height: 48px !important;
+                  }
+                }
+                @media (min-width: 1200px) {
+                  .collection-img-responsive {
+                    height: 64px !important;
+                  }
+                }
+              `;
+              document.head.appendChild(style);
+            }
+            
+            // テキストを分割して画像を挿入
+            const parts = text.split(regex);
+            const parent = node.parentNode;
+            if (parts[0]) parent.insertBefore(document.createTextNode(parts[0]), node);
+            parent.insertBefore(img, node);
+            if (parts[1]) parent.insertBefore(document.createTextNode(parts[1]), node);
+            parent.removeChild(node);
+            break;
           } else {
-            // 単一の場合はそのままのファイル名
-            imgFile = `${w}.webp`;
+            // テキスト置換（一回のみ）
+            text = text.replace(regex, fourLetterWordTranslations[w]);
+            node.textContent = text;
+            break;
           }
-          
-          img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}`;
-          img.alt = w
-          img.style.height = '63.99px';
-          img.style.verticalAlign = 'middle';
-          
-          // テキストを分割して画像を挿入
-          const parts = text.split(regex);
-          const parent = node.parentNode;
-          if (parts[0]) parent.insertBefore(document.createTextNode(parts[0]), node);
-          parent.insertBefore(img, node);
-          if (parts[1]) parent.insertBefore(document.createTextNode(parts[1]), node);
-          parent.removeChild(node);
-          break;
-        } else {
-          // テキスト置換（一回のみ）
-          text = text.replace(regex, fourLetterWordTranslations[w]);
-          node.textContent = text;
-          break;
         }
       }
     }
-  }
+  });
 }
 
 
@@ -791,6 +1076,9 @@ const observer = new MutationObserver(mutations => {
         if (text === 'The calculator can only calculate the change of attack according to the change of attribute, and cannot directly calculate the attack value. So when you check this option, you need to ensure that the current input attack value is correct. Since it is impossible to obtain all accurate data, some calculation results are estimates.') {
           node.textContent = 'この計算機は属性の変化に基づいて攻撃力の変化を計算するもので、直接的な攻撃値の計算は行いません。このオプションを選択する場合、現在の入力攻撃値が正しいことを確認してください。すべての正確なデータを取得することは不可能なため、一部の計算結果は推定値となります。';
         }
+        if (text === "Some of entries can't fully take effect, this tool will infer a effect percent, you can correct it by clicking the percent button.") {
+          node.textContent = "一部のエントリは完全に反映されない場合があります。このツールは効果割合を推測しますが、パーセントボタンをクリックして修正できます。";
+        }
         // ボタンテキストも翻訳
         translateButtonSpans(node);
       }
@@ -810,6 +1098,9 @@ const observer = new MutationObserver(mutations => {
         }
         if (text === 'The calculator can only calculate the change of attack according to the change of attribute, and cannot directly calculate the attack value. So when you check this option, you need to ensure that the current input attack value is correct. Since it is impossible to obtain all accurate data, some calculation results are estimates.') {
           el.textContent = 'この計算機は属性の変化に基づいて攻撃力の変化を計算するもので、直接的な攻撃値の計算は行いません。このオプションを選択する場合、現在の入力攻撃値が正しいことを確認してください。すべての正確なデータを取得することは不可能なため、一部の計算結果は推定値となります。';
+        }
+        if (text === "Some of entries can't fully take effect, this tool will infer a effect percent, you can correct it by clicking the percent button.") {
+          el.textContent = "一部のエントリは完全に反映されない場合があります。このツールは効果割合を推測しますが、パーセントボタンをクリックして修正できます。";
         }
         // ボタンテキストも翻訳
         translateButtonSpans(el);
@@ -834,6 +1125,46 @@ const observer = new MutationObserver(mutations => {
       // .header の翻訳（動的対応）
       if (node.matches('.header, .header *')) translateHeaderDivs(node);
       node.querySelectorAll?.('.header, .header *')?.forEach(el => translateHeaderDivs(el));
+
+      // data-v-8ad820e7の翻訳（動的対応）
+      if (node.matches('[data-v-8ad820e7]')) translateDataV8ad820e7Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-8ad820e7]')?.forEach(el => translateDataV8ad820e7Texts(el.parentElement || document));
+
+      // data-v-97357ef8の翻訳（動的対応）
+      if (node.matches('[data-v-97357ef8]')) translateDataV97357ef8Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-97357ef8]')?.forEach(el => translateDataV97357ef8Texts(el.parentElement || document));
+
+      // data-v-1665dd79の翻訳（動的対応）
+      if (node.matches('[data-v-1665dd79]')) translateDataV1665dd79Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-1665dd79]')?.forEach(el => translateDataV1665dd79Texts(el.parentElement || document));
+
+      // data-v-ba29143fの翻訳（動的対応）
+      if (node.matches('[data-v-ba29143f]')) translateDataVba29143fTexts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-ba29143f]')?.forEach(el => translateDataVba29143fTexts(el.parentElement || document));
+
+      // data-v-e42e7082の翻訳（動的対応）
+      if (node.matches('[data-v-e42e7082]')) translateDataVe42e7082Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-e42e7082]')?.forEach(el => translateDataVe42e7082Texts(el.parentElement || document));
+
+      // data-v-a7c737c2の翻訳（動的対応）
+      if (node.matches('[data-v-a7c737c2]')) translateDataVa7c737c2Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-a7c737c2]')?.forEach(el => translateDataVa7c737c2Texts(el.parentElement || document));
+
+      // data-v-4169b4f9の翻訳（動的対応）
+      if (node.matches('[data-v-4169b4f9]')) translateDataV4169b4f9Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-4169b4f9]')?.forEach(el => translateDataV4169b4f9Texts(el.parentElement || document));
+
+      // data-v-6b888e4bの翻訳（動的対応）
+      if (node.matches('[data-v-6b888e4b]')) translateDataV6b888e4bTexts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-6b888e4b]')?.forEach(el => translateDataV6b888e4bTexts(el.parentElement || document));
+
+      // data-v-77b79087の翻訳（動的対応）
+      if (node.matches('[data-v-77b79087]')) translateDataV77b79087Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-77b79087]')?.forEach(el => translateDataV77b79087Texts(el.parentElement || document));
+
+      // data-v-2268fce9の翻訳（動的対応）
+      if (node.matches('[data-v-2268fce9]')) translateDataV2268fce9Texts(node.parentElement || document);
+      node.querySelectorAll?.('[data-v-2268fce9]')?.forEach(el => translateDataV2268fce9Texts(el.parentElement || document));
     }
 
     // 既存ノードのテキスト変化も監視

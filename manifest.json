@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Danke007JpTranslator",
-  "version": "0.46",
-  "description": "Dankeの非公式日本語訳拡張機能です。",
+  "version": "0.51",
+  "description": "Dankeの非公式日本語訳拡張機能です。(開発用)",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
