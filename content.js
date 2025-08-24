@@ -400,98 +400,6 @@ const fourLetterWords = [
   "Rare"
 ];
 
-// Huma
-// Book
-// Immo
-// Inst
-// Ange
-// Unic
-// Othe
-// Star
-// High
-// Void
-// Eye
-// Life
-// Nano
-// Dice
-// Dime
-// Ment
-// Atom
-// Time
-// Drag
-// Hype
-// Cybe
-// Clon
-// Drea
-// Gene
-// Memo
-// Temp
-// Spat
-// Holo
-// Gold
-// Old
-// Savi
-// Safe
-// Myst
-// Luck
-// Scie
-// Supe
-// Myst
-// Gran
-// Pass
-// Tabl
-// Prim
-// Flar
-// Astr
-// Drea
-// Limi
-// Vita
-// Uniq
-// Biza
-// Aero
-// Nucl
-// Plas
-// Gold
-// Elem
-// Auto
-// Spor
-// Worl
-// Elep
-// Phan
-// Birt
-// Frui
-// Crys
-// Anti
-// Hydr
-// Supe
-// Comm
-// Dice
-// Coll
-// Lion
-// Hear
-// Bran
-// Mini
-// Micr
-// Klei
-// Anti
-// Luck
-// Gold
-// Bunn
-// Need
-// Sort
-// Wild
-// Infi
-// Cosm
-// Worm
-// Bion
-// EM
-// Fire
-// Shut
-// Neur
-// Star
-// Port
-// Rare
-
 // 重複単語の画像ファイル名マッピング（事前定義）
 const duplicateWordsImageMap = {
   "Myst": ["Myst_1.webp", "Myst_2.webp"],
@@ -628,8 +536,8 @@ function replaceFourLetterWords(root=document) {
           }
           
           img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}`;
-          img.alt = w;
-          img.style.height = '2.0em';
+          img.alt = w
+          img.style.height = '63.99px';
           img.style.verticalAlign = 'middle';
           
           // テキストを分割して画像を挿入
