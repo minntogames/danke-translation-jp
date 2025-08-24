@@ -399,6 +399,99 @@ const fourLetterWords = [
   "Port",
   "Rare"
 ];
+
+// Huma
+// Book
+// Immo
+// Inst
+// Ange
+// Unic
+// Othe
+// Star
+// High
+// Void
+// Eye
+// Life
+// Nano
+// Dice
+// Dime
+// Ment
+// Atom
+// Time
+// Drag
+// Hype
+// Cybe
+// Clon
+// Drea
+// Gene
+// Memo
+// Temp
+// Spat
+// Holo
+// Gold
+// Old
+// Savi
+// Safe
+// Myst
+// Luck
+// Scie
+// Supe
+// Myst
+// Gran
+// Pass
+// Tabl
+// Prim
+// Flar
+// Astr
+// Drea
+// Limi
+// Vita
+// Uniq
+// Biza
+// Aero
+// Nucl
+// Plas
+// Gold
+// Elem
+// Auto
+// Spor
+// Worl
+// Elep
+// Phan
+// Birt
+// Frui
+// Crys
+// Anti
+// Hydr
+// Supe
+// Comm
+// Dice
+// Coll
+// Lion
+// Hear
+// Bran
+// Mini
+// Micr
+// Klei
+// Anti
+// Luck
+// Gold
+// Bunn
+// Need
+// Sort
+// Wild
+// Infi
+// Cosm
+// Worm
+// Bion
+// EM
+// Fire
+// Shut
+// Neur
+// Star
+// Port
+// Rare
+
 const fourLetterWordTranslations = {
   "Huma": "人類",
   "Book": "古の",
@@ -524,7 +617,7 @@ function replaceFourLetterWords(root=document) {
               }
               img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${imgFile}.webp`;
               img.alt = w;
-              img.style.height = '2.3em';
+              img.style.height = '2.5em';
               img.style.verticalAlign = 'middle';
               parent.insertBefore(img, node);
             }
