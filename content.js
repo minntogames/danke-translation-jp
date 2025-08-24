@@ -68,7 +68,7 @@ const checkboxLineTranslations = {
 
 // .wrapper内で各装備種別名を含む要素の中の"SS"を画像に置き換える
 function replaceSSWithImageInWrapper(root=document) {
-  const uri = "https://youtube.minntelia.com/danke-translation-jp/";
+  const uri = "https://minntogames.github.io/danke-translation-jp/";
   const typeToImg = {
     weapon: 'ss_tl.PNG',
     armor: 'ss_ea.PNG',
@@ -400,10 +400,10 @@ const fourLetterWords = [
   "Rare"
 ];
 const fourLetterWordTranslations = {
-  "Huma": "<img src='https://youtube.minntelia.com/danke-translation-jp/src/img/ss/ss_hu.PNG' alt='人' style='height:1.2em;vertical-align:middle;'>",
-  "Book": "本",
-  "Immo": "不死",
-  "Inst": "即発",
+  "Huma": "人類",
+  "Book": "古の",
+  "Immo": "不朽",
+  "Inst": "星間",
   "Ange": "天使",
   "Unic": "ユニコーン",
   "Othe": "その他",
@@ -411,7 +411,7 @@ const fourLetterWordTranslations = {
   "High": "高い",
   "Void": "虚無",
   "Eye": "目",
-  "Life": "生命",
+  "Life": "命の",
   "Nano": "ナノ",
   "Dice": "サイコロ",
   "Dime": "次元",
@@ -489,14 +489,35 @@ function replaceFourLetterWords(root=document) {
   const walker = document.createTreeWalker(root.body || root, NodeFilter.SHOW_TEXT, null);
   let node;
   while ((node = walker.nextNode())) {
-    let txt = node.textContent;
-    fourLetterWords.forEach(w => {
-      if (fourLetterWordTranslations[w]) {
-        // 単語境界でのみ置換
-        txt = txt.replace(new RegExp(`\\b${w}\\b`, 'g'), fourLetterWordTranslations[w]);
+    let replaced = false;
+    for (const w of fourLetterWords) {
+      const regex = new RegExp(`\\b${w}\\b`, 'g');
+      if (node.textContent.match(regex)) {
+        // 画像で置換する場合
+        if (w === "Huma" || w === "Book" || w === "Immo" || w === "Inst" || w === "Ange" || w === "Unic" || w === "Othe" || w === "Star" || w === "High" || w === "Void" || w === "Eye" || w === "Life" || w === "Nano" || w === "Dice" || w === "Dime" || w === "Ment" || w === "Atom" || w === "Time" || w === "Drag" || w === "Hype" || w === "Cybe" || w === "Clon" || w === "Drea" || w === "Gene" || w === "Memo" || w === "Temp" || w === "Spat" || w === "Holo" || w === "Gold" || w === "Old" || w === "Savi" || w === "Safe" || w === "Myst" || w === "Luck" || w === "Scie" || w === "Supe" || w === "Gran" || w === "Pass" || w === "Tabl" || w === "Prim" || w === "Flar" || w === "Astr" || w === "Limi" || w === "Vita" || w === "Uniq" || w === "Biza" || w === "Aero" || w === "Nucl" || w === "Plas" || w === "Elem" || w === "Auto" || w === "Spor" || w === "Worl" || w === "Elep" || w === "Phan" || w === "Birt" || w === "Frui" || w === "Crys" || w === "Anti" || w === "Hydr" || w === "Comm" || w === "Coll" || w === "Lion" || w === "Hear" || w === "Bran" || w === "Mini" || w === "Micr" || w === "Klei" || w === "Bunn" || w === "Need" || w === "Sort" || w === "Wild" || w === "Infi" || w === "Cosm" || w === "Worm" || w === "Bion" || w === "EM" || w === "Fire" || w === "Shut" || w === "Neur" || w === "Port" || w === "Rare") {
+          // 画像名は英語名と一致
+          const img = document.createElement('img');
+          img.src = `https://minntogames.github.io/danke-translation-jp/src/img/col/${w}.webp`;
+          img.alt = w;
+          img.style.height = '2em';
+          img.style.verticalAlign = 'middle';
+          // テキストノードを分割して置換
+          const parent = node.parentNode;
+          const parts = node.textContent.split(regex);
+          for (let i = 0; i < parts.length; i++) {
+            if (parts[i]) parent.insertBefore(document.createTextNode(parts[i]), node);
+            if (i < parts.length - 1) parent.insertBefore(img.cloneNode(), node);
+          }
+          parent.removeChild(node);
+          replaced = true;
+          break;
+        } else {
+          // テキスト置換
+          node.textContent = node.textContent.replace(regex, fourLetterWordTranslations[w]);
+        }
       }
-    });
-    node.textContent = txt;
+    }
+    if (replaced) continue;
   }
 }
 
